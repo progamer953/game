@@ -2,107 +2,162 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ChillGamer2014 Jump Scare!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Click the Box Game - ChillGamer2014 Edition</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: #f0f8ff;
       font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
       text-align: center;
-      height: 100vh;
-      overflow-x: hidden;
-      overflow-y: hidden;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="32" width="32"><circle cx="16" cy="16" r="12" fill="darkblue"/></svg>') 16 16, auto;
     }
 
     h1 {
-      margin-top: 50px;
-      color: #333;
-    }
-
-    #jump-scare {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
-      color: white;
-      z-index: 9999;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      animation: fadeIn 0.6s ease forwards;
-    }
-
-    #jump-message {
-      background: red;
-      padding: 40px;
-      border-radius: 15px;
-      font-size: 2rem;
-      animation: shake 0.6s infinite;
-    }
-
-    #jump-message button {
       margin-top: 20px;
-      padding: 12px 25px;
-      font-size: 1rem;
+    }
+
+    #game-area {
+      position: relative;
+      width: 80%;
+      height: 500px;
+      margin: 20px auto;
+      border: 3px solid #333;
+      background-color: white;
+      overflow: hidden;
+    }
+
+    #box {
+      width: 60px;
+      height: 60px;
+      background-color: red;
+      position: absolute;
+      top: 100px;
+      left: 100px;
       cursor: pointer;
-      background: yellow;
-      border: none;
-      border-radius: 8px;
-      transition: background 0.3s ease;
+      transition: transform 0.2s, background-color 0.2s;
     }
 
-    #jump-message button:hover {
-      background: orange;
+    #box.animate {
+      animation: flash 0.5s ease, shake 0.5s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    @keyframes flash {
+      0% { background-color: yellow; }
+      50% { background-color: red; }
+      100% { background-color: yellow; }
     }
 
     @keyframes shake {
-      0% { transform: translate(0px, 0px); }
-      25% { transform: translate(-10px, 0px); }
-      50% { transform: translate(10px, 0px); }
-      75% { transform: translate(-10px, 0px); }
-      100% { transform: translate(0px, 0px); }
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-5px, 5px); }
+      50% { transform: translate(5px, -5px); }
+      75% { transform: translate(-5px, 5px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    #start-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: green;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #score, #timer {
+      font-size: 18px;
+      margin: 10px;
     }
   </style>
 </head>
 <body>
 
-  <h1>Welcome to the site!</h1>
-  <p>Enjoy your stay... 😄</p>
+  <h1>🎯 Click The Box! - ChillGamer2014</h1>
+  <button id="start-button">Start Game</button>
+  <div id="score">Score: 0</div>
+  <div id="timer">Time Left: 30s</div>
 
-  <!-- Hidden Jump Scare Div -->
-  <div id="jump-scare">
-    <audio id="alarm-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
-    <div id="jump-message">
-      📢 <strong>Subscribe to ChillGamer2014 on YouTube!</strong>
-      <br><br>
-      <button onclick="closeScare()">Close</button>
-    </div>
+  <div id="game-area">
+    <div id="box"></div>
   </div>
 
-  <script>
-    // Show jump scare after 5 seconds
-    setTimeout(() => {
-      document.getElementById('jump-scare').style.display = 'flex';
-      document.getElementById('alarm-sound').play();
-    }, 5000);
+  <!-- Alarm Sound -->
+  <audio id="alarm-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
 
-    // Close the scare and stop the alarm
-    function closeScare() {
-      document.getElementById('jump-scare').style.display = 'none';
-      const sound = document.getElementById('alarm-sound');
-      sound.pause();
-      sound.currentTime = 0;
+  <script>
+    const box = document.getElementById('box');
+    const scoreDisplay = document.getElementById('score');
+    const timerDisplay = document.getElementById('timer');
+    const startButton = document.getElementById('start-button');
+    const gameArea = document.getElementById('game-area');
+    const alarmSound = document.getElementById('alarm-sound');
+
+    let score = 0;
+    let timeLeft = 30;
+    let timerInterval;
+    let gameActive = false;
+
+    function moveBox() {
+      const maxX = gameArea.clientWidth - box.clientWidth;
+      const maxY = gameArea.clientHeight - box.clientHeight;
+
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+
+      box.style.left = randomX + 'px';
+      box.style.top = randomY + 'px';
     }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 30;
+      gameActive = true;
+      scoreDisplay.textContent = 'Score: 0';
+      timerDisplay.textContent = 'Time Left: 30s';
+      startButton.disabled = true;
+      box.style.display = 'block';
+      moveBox();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = 'Time Left: ' + timeLeft + 's';
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function increaseScore() {
+      if (!gameActive) return;
+      score++;
+      scoreDisplay.textContent = 'Score: ' + score;
+
+      // Play alarm sound
+      alarmSound.currentTime = 0;
+      alarmSound.play();
+
+      // Add animation
+      box.classList.add('animate');
+      setTimeout(() => {
+        box.classList.remove('animate');
+      }, 500);
+
+      moveBox();
+    }
+
+    function endGame() {
+      clearInterval(timerInterval);
+      gameActive = false;
+      box.style.display = 'none';
+      startButton.disabled = false;
+      alert('⏰ Time\'s up! Your final score: ' + score);
+    }
+
+    startButton.addEventListener('click', startGame);
+    box.addEventListener('click', increaseScore);
   </script>
 
 </body>
