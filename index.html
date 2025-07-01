@@ -1,76 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Jump Scare Subscribe</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin:0; padding:0;
-    height:100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #fafafa;
-  }
-  #jump-scare {
-    display: none;
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-    font-size: 2.5rem;
-    text-align: center;
-    padding: 40px;
-    box-sizing: border-box;
-    z-index: 9999;
-    animation: popin 0.5s ease forwards;
-  }
-  #jump-scare button {
-    margin-top: 30px;
-    font-size: 1.2rem;
-    padding: 10px 20px;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    background-color: #3b82f6;
-    color: white;
-    transition: background-color 0.3s ease;
-  }
-  #jump-scare button:hover {
-    background-color: #2563eb;
-  }
-  @keyframes popin {
-    from {
-      transform: scale(0.5);
-      opacity: 0;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChillGamer2014 Jump Scare!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f8ff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      height: 100vh;
+      overflow-x: hidden;
+      overflow-y: hidden;
     }
-    to {
-      transform: scale(1);
-      opacity: 1;
+
+    h1 {
+      margin-top: 50px;
+      color: #333;
     }
-  }
-</style>
+
+    #jump-scare {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    #jump-message {
+      background: red;
+      padding: 40px;
+      border-radius: 15px;
+      font-size: 2rem;
+      animation: shake 0.6s infinite;
+    }
+
+    #jump-message button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: yellow;
+      border: none;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    #jump-message button:hover {
+      background: orange;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0px, 0px); }
+      25% { transform: translate(-10px, 0px); }
+      50% { transform: translate(10px, 0px); }
+      75% { transform: translate(-10px, 0px); }
+      100% { transform: translate(0px, 0px); }
+    }
+  </style>
 </head>
 <body>
 
-<div id="jump-scare">
-  <div>📢 Subscribe to <strong>ChillGamer2014</strong> on YouTube!</div>
-  <button onclick="closeScare()">Close</button>
-</div>
+  <h1>Welcome to the site!</h1>
+  <p>Enjoy your stay... 😄</p>
 
-<script>
-  // Show the message after 5 seconds
-  setTimeout(() => {
-    document.getElementById('jump-scare').style.display = 'flex';
-  }, 5000);
+  <!-- Hidden Jump Scare Div -->
+  <div id="jump-scare">
+    <audio id="alarm-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
+    <div id="jump-message">
+      📢 <strong>Subscribe to ChillGamer2014 on YouTube!</strong>
+      <br><br>
+      <button onclick="closeScare()">Close</button>
+    </div>
+  </div>
 
-  // Close button hides the message
-  function closeScare() {
-    document.getElementById('jump-scare').style.display = 'none';
-  }
-</script>
+  <script>
+    // Show jump scare after 5 seconds
+    setTimeout(() => {
+      document.getElementById('jump-scare').style.display = 'flex';
+      document.getElementById('alarm-sound').play();
+    }, 5000);
+
+    // Close the scare and stop the alarm
+    function closeScare() {
+      document.getElementById('jump-scare').style.display = 'none';
+      const sound = document.getElementById('alarm-sound');
+      sound.pause();
+      sound.currentTime = 0;
+    }
+  </script>
 
 </body>
 </html>
