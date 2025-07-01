@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Click the Box Game - ChillGamer2014 Edition</title>
+  <title>Click The Box Game - ChillGamer2014 Edition</title>
   <style>
     body {
       margin: 0;
@@ -71,6 +71,51 @@
       font-size: 18px;
       margin: 10px;
     }
+
+    /* Jump Scare Overlay */
+    #jump-scare {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    #jump-message {
+      background: red;
+      padding: 40px;
+      border-radius: 15px;
+      font-size: 2rem;
+      animation: shake 0.6s infinite;
+    }
+
+    #jump-message button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: yellow;
+      border: none;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    #jump-message button:hover {
+      background: orange;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -84,8 +129,18 @@
     <div id="box"></div>
   </div>
 
-  <!-- Alarm Sound -->
-  <audio id="alarm-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
+  <!-- Alarm Sounds -->
+  <audio id="click-alarm" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
+  <audio id="jump-alarm" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
+
+  <!-- Jump Scare Overlay -->
+  <div id="jump-scare">
+    <div id="jump-message">
+      📢 <strong>Subscribe to ChillGamer2014 on YouTube!</strong>
+      <br><br>
+      <button onclick="closeScare()">Close</button>
+    </div>
+  </div>
 
   <script>
     const box = document.getElementById('box');
@@ -93,7 +148,9 @@
     const timerDisplay = document.getElementById('timer');
     const startButton = document.getElementById('start-button');
     const gameArea = document.getElementById('game-area');
-    const alarmSound = document.getElementById('alarm-sound');
+    const clickAlarm = document.getElementById('click-alarm');
+    const jumpAlarm = document.getElementById('jump-alarm');
+    const jumpScare = document.getElementById('jump-scare');
 
     let score = 0;
     let timeLeft = 30;
@@ -135,11 +192,11 @@
       score++;
       scoreDisplay.textContent = 'Score: ' + score;
 
-      // Play alarm sound
-      alarmSound.currentTime = 0;
-      alarmSound.play();
+      // Play click alarm sound
+      clickAlarm.currentTime = 0;
+      clickAlarm.play();
 
-      // Add animation
+      // Box animation
       box.classList.add('animate');
       setTimeout(() => {
         box.classList.remove('animate');
@@ -156,8 +213,23 @@
       alert('⏰ Time\'s up! Your final score: ' + score);
     }
 
+    function triggerJumpScare() {
+      jumpScare.style.display = 'flex';
+      jumpAlarm.currentTime = 0;
+      jumpAlarm.play();
+    }
+
+    function closeScare() {
+      jumpScare.style.display = 'none';
+      jumpAlarm.pause();
+      jumpAlarm.currentTime = 0;
+    }
+
     startButton.addEventListener('click', startGame);
     box.addEventListener('click', increaseScore);
+
+    // Trigger jump scare after 5 seconds
+    setTimeout(triggerJumpScare, 5000);
   </script>
 
 </body>
