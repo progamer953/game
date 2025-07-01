@@ -129,7 +129,6 @@
 
   <!-- Sounds -->
   <audio id="click-alarm" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"></audio>
-  <!-- Updated scream sound (public URL that works) -->
   <audio id="scream-sound" src="https://cdn.pixabay.com/download/audio/2021/10/21/audio_89f232cdcb.mp3?filename=scream-6034.mp3"></audio>
 
   <!-- Jump Scare -->
@@ -152,6 +151,7 @@
     let timeLeft = 30;
     let timerInterval;
     let gameActive = false;
+    let gamePaused = false;
 
     function moveBox() {
       const maxX = gameArea.clientWidth - box.clientWidth;
@@ -166,6 +166,7 @@
       score = 0;
       timeLeft = 30;
       gameActive = true;
+      gamePaused = false;
       scoreDisplay.textContent = 'Score: 0';
       timerDisplay.textContent = 'Time Left: 30s';
       startButton.disabled = true;
@@ -173,16 +174,18 @@
       moveBox();
 
       timerInterval = setInterval(() => {
-        timeLeft--;
-        timerDisplay.textContent = 'Time Left: ' + timeLeft + 's';
-        if (timeLeft <= 0) {
-          endGame();
+        if (!gamePaused) {
+          timeLeft--;
+          timerDisplay.textContent = 'Time Left: ' + timeLeft + 's';
+          if (timeLeft <= 0) {
+            endGame();
+          }
         }
       }, 1000);
     }
 
     function increaseScore() {
-      if (!gameActive) return;
+      if (!gameActive || gamePaused) return;
       score++;
       scoreDisplay.textContent = 'Score: ' + score;
 
@@ -198,12 +201,15 @@
     function endGame() {
       clearInterval(timerInterval);
       gameActive = false;
+      gamePaused = false;
       box.style.display = 'none';
       startButton.disabled = false;
       alert('⏰ Time\'s up! Your final score: ' + score);
     }
 
     function triggerJumpScare() {
+      if (!gameActive) return; // don't scare when game inactive
+      gamePaused = true; // pause the game
       jumpScare.style.display = 'flex';
       screamSound.currentTime = 0;
       screamSound.play();
@@ -213,6 +219,7 @@
       jumpScare.style.display = 'none';
       screamSound.pause();
       screamSound.currentTime = 0;
+      gamePaused = false; // resume the game
     }
 
     startButton.addEventListener('click', startGame);
