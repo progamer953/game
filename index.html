@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Click The Box Game - Scary Edition</title>
+  <title>Scary Box Click Game - ChillGamer2014</title>
   <style>
     body {
       margin: 0;
       padding: 0;
+      background-color: black;
       font-family: Arial, sans-serif;
-      background-color: #000;
       text-align: center;
-      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="32" width="32"><circle cx="16" cy="16" r="12" fill="darkblue"/></svg>') 16 16, auto;
       overflow: hidden;
+      color: white;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="32" width="32"><circle cx="16" cy="16" r="12" fill="darkblue"/></svg>') 16 16, auto;
     }
 
     h1 {
       margin-top: 20px;
-      color: white;
     }
 
     #game-area {
@@ -25,7 +25,7 @@
       width: 80%;
       height: 500px;
       margin: 20px auto;
-      border: 3px solid #333;
+      border: 3px solid white;
       background-color: white;
       overflow: hidden;
     }
@@ -72,10 +72,9 @@
     #score, #timer {
       font-size: 18px;
       margin: 10px;
-      color: white;
     }
 
-    /* Scary Jump Scare */
+    /* Jump Scare Overlay */
     #jump-scare {
       display: none;
       position: fixed;
@@ -89,7 +88,7 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      font-size: 4rem;
+      font-size: 3rem;
       font-weight: bold;
       text-shadow: 4px 4px 20px black;
       animation: shakeScreen 0.1s infinite, flashBG 0.5s infinite;
@@ -107,11 +106,22 @@
       0%, 100% { background: red; }
       50% { background: black; }
     }
+
+    #jump-scare button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: yellow;
+      color: black;
+      border: none;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
 
-  <h1>🎯 Click The Box! - But Beware...</h1>
+  <h1>🎯 Click The Box! - Scary Edition</h1>
   <button id="start-button">Start Game</button>
   <div id="score">Score: 0</div>
   <div id="timer">Time Left: 30s</div>
@@ -125,7 +135,10 @@
   <audio id="scream-sound" src="https://freesound.org/data/previews/341/341695_3248244-lq.mp3"></audio>
 
   <!-- Jump Scare -->
-  <div id="jump-scare">👻 SCREAM!!!</div>
+  <div id="jump-scare">
+    👻 SCREAM!!!
+    <button onclick="closeJumpScare()">Close</button>
+  </div>
 
   <script>
     const box = document.getElementById('box');
@@ -198,11 +211,17 @@
       screamSound.play();
     }
 
+    function closeJumpScare() {
+      jumpScare.style.display = 'none';
+      screamSound.pause();
+      screamSound.currentTime = 0;
+    }
+
     startButton.addEventListener('click', startGame);
     box.addEventListener('click', increaseScore);
 
-    // Trigger scary jump scare after 8 seconds
-    setTimeout(triggerJumpScare, 8000);
+    // Keep showing jump scare every 10 seconds forever
+    setInterval(triggerJumpScare, 10000);
   </script>
 
 </body>
