@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click The Box Game</title>
+    <title>Click the Moving Box Game</title>
     <style>
         body {
             margin: 0;
@@ -11,6 +11,7 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             text-align: center;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="32" width="32"><circle cx="16" cy="16" r="12" fill="darkblue"/></svg>') 16 16, auto;
         }
 
         h1 {
@@ -28,10 +29,12 @@
         }
 
         #box {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             background-color: red;
             position: absolute;
+            top: 100px;
+            left: 100px;
             cursor: pointer;
         }
 
@@ -53,7 +56,7 @@
 </head>
 <body>
 
-    <h1>🎯 Click The Box Challenge!</h1>
+    <h1>🎯 Click The Box!</h1>
     <button id="start-button">Start Game</button>
     <div id="score">Score: 0</div>
     <div id="timer">Time Left: 30s</div>
@@ -71,8 +74,8 @@
 
         let score = 0;
         let timeLeft = 30;
-        let gameInterval;
         let timerInterval;
+        let gameActive = false;
 
         function moveBox() {
             const maxX = gameArea.clientWidth - box.clientWidth;
@@ -88,21 +91,16 @@
         function startGame() {
             score = 0;
             timeLeft = 30;
+            gameActive = true;
             scoreDisplay.textContent = 'Score: 0';
             timerDisplay.textContent = 'Time Left: 30s';
             startButton.disabled = true;
-
             box.style.display = 'block';
             moveBox();
-
-            box.addEventListener('click', increaseScore);
-
-            gameInterval = setInterval(moveBox, 800);
 
             timerInterval = setInterval(() => {
                 timeLeft--;
                 timerDisplay.textContent = 'Time Left: ' + timeLeft + 's';
-
                 if (timeLeft <= 0) {
                     endGame();
                 }
@@ -110,20 +108,22 @@
         }
 
         function increaseScore() {
+            if (!gameActive) return;
             score++;
             scoreDisplay.textContent = 'Score: ' + score;
+            moveBox();
         }
 
         function endGame() {
-            clearInterval(gameInterval);
             clearInterval(timerInterval);
+            gameActive = false;
             box.style.display = 'none';
-            box.removeEventListener('click', increaseScore);
             startButton.disabled = false;
             alert('⏰ Time\'s up! Your final score: ' + score);
         }
 
         startButton.addEventListener('click', startGame);
+        box.addEventListener('click', increaseScore);
     </script>
 
 </body>
