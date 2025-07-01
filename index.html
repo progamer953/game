@@ -92,6 +92,9 @@
       font-weight: bold;
       text-shadow: 4px 4px 20px black;
       animation: shakeScreen 0.1s infinite, flashBG 0.5s infinite;
+      gap: 30px;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     @keyframes shakeScreen {
@@ -108,14 +111,20 @@
     }
 
     #jump-scare button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1rem;
+      padding: 15px 30px;
+      font-size: 1.2rem;
       cursor: pointer;
       background: yellow;
       color: black;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
+      font-weight: bold;
+      box-shadow: 0 0 10px #ffff33;
+      transition: background 0.3s ease;
+    }
+    #jump-scare button:hover {
+      background: orange;
+      box-shadow: 0 0 20px #ff6600;
     }
   </style>
 </head>
@@ -220,7 +229,7 @@
     startButton.addEventListener('click', startGame);
     box.addEventListener('click', increaseScore);
 
-    // Keep showing jump scare every 10 seconds forever
+    // Show jump scare every 10 seconds repeatedly
     setInterval(triggerJumpScare, 10000);
   </script>
 
